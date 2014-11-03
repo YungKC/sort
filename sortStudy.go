@@ -8,11 +8,12 @@ type Interface interface {
 	Swap(i, j int)
 }
 
+// InsertionSort
 func InsertionSort(data Interface) {
 	insertionSort(data, 0, data.Len())
 }
 
-// sort data from index a to b
+// insertion sort data from index a to b
 func insertionSort(data Interface, a, b int) {
 	for i := a + 1; i < b; i++ {
 		for j := i; j > a; j-- {
@@ -22,6 +23,22 @@ func insertionSort(data Interface, a, b int) {
 		}
 	}
 }
+
+// SelectionSort
+func SelectionSort(data Interface) {
+	length := data.Len()
+	for i := 0; i < length; i++ {
+		toMoveIndex := i
+		for j := i + 1; j < length; j++ {
+			if data.Less(j, toMoveIndex) {
+				toMoveIndex = j
+			}
+		}
+		data.Swap(i, toMoveIndex)
+	}
+}
+
+// -------------------------------------------------
 
 func IsSorted(data Interface) bool {
 	length := data.Len()
