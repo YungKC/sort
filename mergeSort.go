@@ -3,24 +3,22 @@
 package sortStudy
 
 //import "fmt"
+//import "reflect"
 
 // MergeSort
-func MergeSort(data []int) {
-	buffer := make([]int, len(data))
-	mergeSort(data, buffer, 0, len(data)-1)
+func MergeSort(data, buffer Interface) {
+	mergeSort(data, buffer, 0, data.Len()-1)
 }
 
 // merge sort data from index a to b
 
-func mergeSort(data, buffer []int, a, b int) {
+func mergeSort(data, buffer Interface, a, b int) {
 	//	fmt.Println("mergeSort: ", a, b, data)
 	if a == b {
 		return
 	} else if b-a == 1 {
-		if data[a] > data[b] {
-			tmp := data[a]
-			data[a] = data[b]
-			data[b] = tmp
+		if data.Less(b, a) {
+			data.Swap(a, b)
 		}
 		return
 	}
@@ -31,7 +29,7 @@ func mergeSort(data, buffer []int, a, b int) {
 	merge(data, buffer, a, center, b)
 }
 
-func merge(data, buffer []int, left, center, right int) {
+func merge(data, buffer Interface, left, center, right int) {
 
 	//	fmt.Println("merge: ", left, center, right, data)
 
@@ -41,8 +39,8 @@ func merge(data, buffer []int, left, center, right int) {
 	leftReached := false
 	rightReached := false
 	for bufferIndex <= right {
-		if data[leftIndex] < data[rightIndex] && !leftReached || rightReached {
-			buffer[bufferIndex] = data[leftIndex]
+		if data.Less(leftIndex, rightIndex) && !leftReached || rightReached {
+			buffer.Set(bufferIndex, data.Get(leftIndex))
 			bufferIndex++
 			if leftIndex < center {
 				leftIndex++
@@ -50,7 +48,7 @@ func merge(data, buffer []int, left, center, right int) {
 				leftReached = true
 			}
 		} else {
-			buffer[bufferIndex] = data[rightIndex]
+			buffer.Set(bufferIndex, data.Get(rightIndex))
 			bufferIndex++
 			if rightIndex < right {
 				rightIndex++
@@ -62,7 +60,7 @@ func merge(data, buffer []int, left, center, right int) {
 	//	fmt.Println("Buffer: ", buffer)
 	bufferIndex = left
 	for i := left; i <= right; i++ {
-		data[i] = buffer[bufferIndex]
+		data.Set(i, buffer.Get(bufferIndex))
 		bufferIndex++
 	}
 

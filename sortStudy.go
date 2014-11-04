@@ -6,9 +6,12 @@ type Interface interface {
 	Len() int
 	Less(i, j int) bool
 	Swap(i, j int)
+	Get(i int) interface{}
+	Set(i int, value interface{})
 }
 
 // InsertionSort
+// sort by swapping left adjacent neigbhor
 func InsertionSort(data Interface) {
 	insertionSort(data, 0, data.Len())
 }
@@ -25,6 +28,7 @@ func insertionSort(data Interface, a, b int) {
 }
 
 // SelectionSort
+// sort by selecting the smallest first
 func SelectionSort(data Interface) {
 	length := data.Len()
 	for i := 0; i < length; i++ {
@@ -52,6 +56,8 @@ func IsSorted(data Interface) bool {
 
 type IntSlice []int
 
-func (p IntSlice) Len() int           { return len(p) }
-func (p IntSlice) Less(i, j int) bool { return p[i] < p[j] }
-func (p IntSlice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+func (p IntSlice) Len() int                     { return len(p) }
+func (p IntSlice) Less(i, j int) bool           { return p[i] < p[j] }
+func (p IntSlice) Swap(i, j int)                { tmp := p[i]; p[i] = p[j]; p[j] = tmp }
+func (p IntSlice) Get(i int) interface{}        { return p[i] }
+func (p IntSlice) Set(i int, value interface{}) { p[i] = value.(int) }
