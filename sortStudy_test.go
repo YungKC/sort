@@ -36,3 +36,14 @@ func TestSelectionSort(t *testing.T) {
 		t.Error("Sorted %v", data)
 	}
 }
+
+func TestMergeSort(t *testing.T) {
+	data := ints
+	dataSlice := IntSlice(data[0:])
+	MergeSort(dataSlice)
+	fmt.Println(dataSlice)
+	if !IsSorted(dataSlice) {
+		t.Error("Input %v", ints)
+		t.Error("Sorted %v", data)
+	}
+}
