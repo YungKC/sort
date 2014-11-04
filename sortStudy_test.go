@@ -2,6 +2,8 @@ package sortStudy
 
 import (
 	"fmt"
+	"math/rand"
+	"runtime"
 	"testing"
 )
 
@@ -38,11 +40,17 @@ func TestSelectionSort(t *testing.T) {
 }
 
 func TestMergeSort(t *testing.T) {
-	data := ints
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	size := 3000000
+	data := make([]int, size)
+	for i := 0; i < size; i++ {
+		data[i] = rand.Int()
+	}
+	//	data := ints
 	dataSlice := IntSlice(data[0:])
 	buffer := make([]int, len(data))
 	MergeSort(dataSlice, IntSlice(buffer))
-	fmt.Println(dataSlice)
+	//	fmt.Println(dataSlice)
 	if !IsSorted(dataSlice) {
 		t.Error("Input %v", ints)
 		t.Error("Sorted %v", data)

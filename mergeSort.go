@@ -24,8 +24,19 @@ func mergeSort(data, buffer Interface, a, b int) {
 	}
 
 	center := (a + b) / 2
-	mergeSort(data, buffer, a, center)
-	mergeSort(data, buffer, center+1, b)
+
+	// parallelize the split merge logic here
+	c := make(chan bool)
+	go func() { mergeSort(data, buffer, a, center); c <- true }()
+	go func() { mergeSort(data, buffer, center+1, b); c <- true }()
+	for i := 0; i < 2; i++ {
+		<-c
+	}
+
+	// serial implementation
+	//mergeSort(data, buffer, a, center)
+	//mergeSort(data, buffer, center+1, b)
+
 	merge(data, buffer, a, center, b)
 }
 
