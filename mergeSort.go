@@ -15,6 +15,13 @@ func mergeSort(data []int, a, b int) {
 	//	fmt.Println("mergeSort: ", a, b, data)
 	if a == b {
 		return
+	} else if b-a == 1 {
+		if data[a] > data[b] {
+			tmp := data[a]
+			data[a] = data[b]
+			data[b] = tmp
+		}
+		return
 	}
 
 	center := (a + b) / 2
@@ -26,15 +33,6 @@ func mergeSort(data []int, a, b int) {
 func merge(data []int, left, center, right int) {
 
 	//	fmt.Println("merge: ", left, center, right, data)
-
-	if right-left == 1 {
-		if data[left] > data[right] {
-			tmp := data[left]
-			data[left] = data[right]
-			data[right] = tmp
-		}
-		return
-	}
 
 	buffer := make([]int, right-left+1)
 	leftIndex := left
