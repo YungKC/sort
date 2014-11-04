@@ -6,12 +6,13 @@ package sortStudy
 
 // MergeSort
 func MergeSort(data []int) {
-	mergeSort(data, 0, len(data)-1)
+	buffer := make([]int, len(data))
+	mergeSort(data, buffer, 0, len(data)-1)
 }
 
 // merge sort data from index a to b
 
-func mergeSort(data []int, a, b int) {
+func mergeSort(data, buffer []int, a, b int) {
 	//	fmt.Println("mergeSort: ", a, b, data)
 	if a == b {
 		return
@@ -25,22 +26,21 @@ func mergeSort(data []int, a, b int) {
 	}
 
 	center := (a + b) / 2
-	mergeSort(data, a, center)
-	mergeSort(data, center+1, b)
-	merge(data, a, center, b)
+	mergeSort(data, buffer, a, center)
+	mergeSort(data, buffer, center+1, b)
+	merge(data, buffer, a, center, b)
 }
 
-func merge(data []int, left, center, right int) {
+func merge(data, buffer []int, left, center, right int) {
 
 	//	fmt.Println("merge: ", left, center, right, data)
 
-	buffer := make([]int, right-left+1)
 	leftIndex := left
 	rightIndex := center + 1
-	bufferIndex := 0
+	bufferIndex := left
 	leftReached := false
 	rightReached := false
-	for bufferIndex < len(buffer) {
+	for bufferIndex <= right {
 		if data[leftIndex] < data[rightIndex] && !leftReached || rightReached {
 			buffer[bufferIndex] = data[leftIndex]
 			bufferIndex++
@@ -60,7 +60,7 @@ func merge(data []int, left, center, right int) {
 		}
 	}
 	//	fmt.Println("Buffer: ", buffer)
-	bufferIndex = 0
+	bufferIndex = left
 	for i := left; i <= right; i++ {
 		data[i] = buffer[bufferIndex]
 		bufferIndex++
