@@ -40,10 +40,10 @@ func TestSelectionSort(t *testing.T) {
 }
 
 func TestQuickSort(t *testing.T) {
-	data := ints
+	data := generateRandomArray(1000)
 	dataSlice := IntSlice(data[0:])
 	QuickSort(dataSlice)
-	fmt.Println(dataSlice)
+	//	fmt.Println(dataSlice)
 	if !IsSorted(dataSlice) {
 		t.Error("Input %v", ints)
 		t.Error("Sorted %v", data)
@@ -51,13 +51,7 @@ func TestQuickSort(t *testing.T) {
 }
 
 func TestMergeSort(t *testing.T) {
-	runtime.GOMAXPROCS(runtime.NumCPU())
-	size := 3000000
-	data := make([]int, size)
-	for i := 0; i < size; i++ {
-		data[i] = rand.Int()
-	}
-	//	data := ints
+	data := generateRandomArray(1000)
 	dataSlice := IntSlice(data[0:])
 	buffer := make([]int, len(data))
 	MergeSort(dataSlice, IntSlice(buffer))
@@ -66,4 +60,13 @@ func TestMergeSort(t *testing.T) {
 		t.Error("Input %v", ints)
 		t.Error("Sorted %v", data)
 	}
+}
+
+func generateRandomArray(count int) []int {
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	data := make([]int, count)
+	for i := 0; i < count; i++ {
+		data[i] = rand.Int()
+	}
+	return data
 }
