@@ -16,15 +16,22 @@ func QuickSort(data Interface) {
 
 func quickSort(data Interface, start, end int) {
 	//	fmt.Println("quickSort: ", data, start, end)
+
 	if start >= end || end < 0 || start < 0 {
 		return
-	} else if end-start == 1 {
-		if data.Less(end, start) {
-			data.Swap(start, end)
-		}
-		return
+	} else if end-start <= 7 {
+		insertionSort(data, start, end)
 	}
+	//if start >= end || end < 0 || start < 0 {
+	//	return
+	//} else if end-start == 1 {
+	//	if data.Less(end, start) {
+	//		data.Swap(start, end)
+	//	}
+	//	return
+	//}
 	//	fmt.Println(start, end)
+
 	pivit := start + rand.Intn(end-start)
 	//	fmt.Println("pivit: ", pivit)
 

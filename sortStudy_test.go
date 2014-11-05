@@ -63,8 +63,8 @@ func generateRandomArray(count int) []int {
 	return data
 }
 
-func benchmarkInternal(b *testing.B, searchFn SortFn) {
-	data := generateRandomArray(100000)
+func benchmarkInternal(b *testing.B, searchFn SortFn, size int) {
+	data := generateRandomArray(size)
 	dataSlice := IntSlice(data[0:])
 	b.ResetTimer()
 	searchFn(dataSlice)
@@ -75,22 +75,22 @@ func benchmarkInternal(b *testing.B, searchFn SortFn) {
 	}
 }
 
-func BenchmarkInsertionSort(b *testing.B) {
-	benchmarkInternal(b, InsertionSort)
-}
-
-func BenchmarkSelectionSort(b *testing.B) {
-	benchmarkInternal(b, SelectionSort)
-}
-
-func BenchmarkQuickSort(b *testing.B) {
-	benchmarkInternal(b, QuickSort)
-}
-
 func BenchmarkMergeSort(b *testing.B) {
-	benchmarkInternal(b, MergeSort)
+	benchmarkInternal(b, MergeSort, 2000000)
 }
 
 func BenchmarkMergeSortConcurrent(b *testing.B) {
-	benchmarkInternal(b, MergeSortConcurrent)
+	benchmarkInternal(b, MergeSortConcurrent, 2000000)
+}
+
+func BenchmarkQuickSort(b *testing.B) {
+	benchmarkInternal(b, QuickSort, 2000000)
+}
+
+func BenchmarkInsertionSort(b *testing.B) {
+	benchmarkInternal(b, InsertionSort, 10000)
+}
+
+func BenchmarkSelectionSort(b *testing.B) {
+	benchmarkInternal(b, SelectionSort, 10000)
 }
