@@ -1,5 +1,5 @@
 // Package sort to provide known types of sorting algorithm
-package sortStudy
+package sort
 
 // Data interface that supports sorting
 type Interface interface {
@@ -9,6 +9,8 @@ type Interface interface {
 	Get(i int) interface{}
 	Set(i int, value interface{})
 }
+
+type SortFn func(Interface)
 
 // InsertionSort
 // sort by swapping left adjacent neigbhor

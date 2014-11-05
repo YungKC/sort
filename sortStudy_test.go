@@ -1,13 +1,20 @@
-package sortStudy
+package sort_test
 
 import (
 	"fmt"
+	. "github.com/yungkc/sort"
+	"math"
 	"math/rand"
 	"runtime"
 	"testing"
 )
 
-var ints = [...]int{74, 59, 238, -784, 9845, 959, 905, 0, 0, 42, 7586, -5467984, 7586}
+var ints = [...]int{74, 59, 238, -784, 9845, 959, 905, 0, 0, 42, math.MaxInt64, math.MinInt64, 7586, -5467984, 7586}
+
+func init() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	fmt.Println("Set GOMAXPROCS to ", runtime.NumCPU())
+}
 
 func TestIsSorted(t *testing.T) {
 	data := ints
@@ -17,56 +24,73 @@ func TestIsSorted(t *testing.T) {
 	}
 }
 
-func TestInsertionSort(t *testing.T) {
+func testInternal(t *testing.T, searchFn SortFn) {
 	data := ints
 	dataSlice := IntSlice(data[0:])
-	InsertionSort(dataSlice)
-	fmt.Println(dataSlice)
+	searchFn(dataSlice)
+	//	fmt.Println(dataSlice)
 	if !IsSorted(dataSlice) {
 		t.Error("Input %v", ints)
 		t.Error("Sorted %v", data)
 	}
+}
+
+func TestInsertionSort(t *testing.T) {
+	testInternal(t, InsertionSort)
 }
 
 func TestSelectionSort(t *testing.T) {
-	data := ints
-	dataSlice := IntSlice(data[0:])
-	SelectionSort(dataSlice)
-	fmt.Println(dataSlice)
-	if !IsSorted(dataSlice) {
-		t.Error("Input %v", ints)
-		t.Error("Sorted %v", data)
-	}
+	testInternal(t, SelectionSort)
 }
 
 func TestQuickSort(t *testing.T) {
-	data := generateRandomArray(1000)
-	dataSlice := IntSlice(data[0:])
-	QuickSort(dataSlice)
-	//	fmt.Println(dataSlice)
-	if !IsSorted(dataSlice) {
-		t.Error("Input %v", ints)
-		t.Error("Sorted %v", data)
-	}
+	testInternal(t, QuickSort)
 }
 
 func TestMergeSort(t *testing.T) {
-	data := generateRandomArray(1000)
-	dataSlice := IntSlice(data[0:])
-	buffer := make([]int, len(data))
-	MergeSort(dataSlice, IntSlice(buffer))
-	//	fmt.Println(dataSlice)
-	if !IsSorted(dataSlice) {
-		t.Error("Input %v", ints)
-		t.Error("Sorted %v", data)
-	}
+	testInternal(t, MergeSort)
+}
+
+func TestMergeSortConcurrent(t *testing.T) {
+	testInternal(t, MergeSortConcurrent)
 }
 
 func generateRandomArray(count int) []int {
-	runtime.GOMAXPROCS(runtime.NumCPU())
 	data := make([]int, count)
 	for i := 0; i < count; i++ {
 		data[i] = rand.Int()
 	}
 	return data
+}
+
+func benchmarkInternal(b *testing.B, searchFn SortFn) {
+	data := generateRandomArray(100000)
+	dataSlice := IntSlice(data[0:])
+	b.ResetTimer()
+	searchFn(dataSlice)
+	b.StopTimer()
+	if !IsSorted(dataSlice) {
+		b.Error("Input %v", ints)
+		b.Error("Sorted %v", data)
+	}
+}
+
+func BenchmarkInsertionSort(b *testing.B) {
+	benchmarkInternal(b, InsertionSort)
+}
+
+func BenchmarkSelectionSort(b *testing.B) {
+	benchmarkInternal(b, SelectionSort)
+}
+
+func BenchmarkQuickSort(b *testing.B) {
+	benchmarkInternal(b, QuickSort)
+}
+
+func BenchmarkMergeSort(b *testing.B) {
+	benchmarkInternal(b, MergeSort)
+}
+
+func BenchmarkMergeSortConcurrent(b *testing.B) {
+	benchmarkInternal(b, MergeSortConcurrent)
 }

@@ -1,18 +1,23 @@
 // Package sort to provide known types of sorting algorithm
 
-package sortStudy
+package sort
 
 //import "fmt"
 //import "reflect"
 
 // MergeSort
-func MergeSort(data, buffer Interface) {
-	mergeSort(data, buffer, 0, data.Len()-1)
+// TODO: find out how to allocate buffer with Interface type instead of IntSlice
+func MergeSort(data Interface) {
+	buffer := Interface(make(IntSlice, data.Len()))
+	mergeSort(data, buffer, 0, data.Len()-1, false)
 }
 
-// merge sort data from index a to b
+func MergeSortConcurrent(data Interface) {
+	buffer := Interface(make(IntSlice, data.Len()))
+	mergeSort(data, buffer, 0, data.Len()-1, true)
+}
 
-func mergeSort(data, buffer Interface, a, b int) {
+func mergeSort(data, buffer Interface, a, b int, isConcurrent bool) {
 	//	fmt.Println("mergeSort: ", a, b, data)
 	if a == b {
 		return
@@ -25,19 +30,20 @@ func mergeSort(data, buffer Interface, a, b int) {
 
 	center := (a + b) / 2
 
-	// parallelize the split merge logic here
-	c := make(chan bool)
-	go func() { mergeSort(data, buffer, a, center); c <- true }()
-	go func() { mergeSort(data, buffer, center+1, b); c <- true }()
-	for i := 0; i < 2; i++ {
-		<-c
+	if isConcurrent {
+		// parallelize the split merge logic here
+		c := make(chan bool)
+		go func() { mergeSort(data, buffer, a, center, isConcurrent); c <- true }()
+		go func() { mergeSort(data, buffer, center+1, b, isConcurrent); c <- true }()
+		for i := 0; i < 2; i++ {
+			<-c
+		}
+		close(c)
+	} else {
+		// serial implementation
+		mergeSort(data, buffer, a, center, isConcurrent)
+		mergeSort(data, buffer, center+1, b, isConcurrent)
 	}
-	close(c)
-
-	// serial implementation
-	//mergeSort(data, buffer, a, center)
-	//mergeSort(data, buffer, center+1, b)
-
 	merge(data, buffer, a, center, b)
 }
 

@@ -1,6 +1,6 @@
 // Package sort to provide known types of sorting algorithm
 
-package sortStudy
+package sort
 
 //import "fmt"
 
