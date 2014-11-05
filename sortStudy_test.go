@@ -39,6 +39,17 @@ func TestSelectionSort(t *testing.T) {
 	}
 }
 
+func TestQuickSort(t *testing.T) {
+	data := ints
+	dataSlice := IntSlice(data[0:])
+	QuickSort(dataSlice)
+	fmt.Println(dataSlice)
+	if !IsSorted(dataSlice) {
+		t.Error("Input %v", ints)
+		t.Error("Sorted %v", data)
+	}
+}
+
 func TestMergeSort(t *testing.T) {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	size := 3000000

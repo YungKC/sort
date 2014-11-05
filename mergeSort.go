@@ -32,6 +32,7 @@ func mergeSort(data, buffer Interface, a, b int) {
 	for i := 0; i < 2; i++ {
 		<-c
 	}
+	close(c)
 
 	// serial implementation
 	//mergeSort(data, buffer, a, center)
