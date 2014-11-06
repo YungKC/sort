@@ -1,6 +1,8 @@
 // Package sort to provide known types of sorting algorithm
 package sort
 
+import "fmt"
+
 // Data interface that supports sorting
 type Interface interface {
 	Len() int
@@ -44,12 +46,30 @@ func SelectionSort(data Interface) {
 	}
 }
 
+// BubbleSort
+func BubbleSort(data Interface) {
+	length := data.Len()
+	for {
+		numSwitched := 0
+		for i := 1; i < length; i++ {
+			if data.Less(i, i-1) {
+				data.Swap(i, i-1)
+				numSwitched++
+			}
+		}
+		if numSwitched == 0 {
+			return
+		}
+	}
+}
+
 // -------------------------------------------------
 
 func IsSorted(data Interface) bool {
 	length := data.Len()
 	for i := 1; i < length; i++ {
 		if data.Less(i, i-1) {
+			fmt.Println("Failed sort at index ", i, " with value ", data.Get(i))
 			return false
 		}
 	}

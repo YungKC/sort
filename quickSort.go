@@ -1,9 +1,7 @@
 // Package sort to provide known types of sorting algorithm
-
 package sort
 
 //import "fmt"
-
 //import "reflect"
 import "math/rand"
 
@@ -22,8 +20,6 @@ func quickSort(data Interface, start, end int) {
 	} else if end-start <= 7 {
 		insertionSort(data, start, end)
 	}
-	//if start >= end || end < 0 || start < 0 {
-	//	return
 	//} else if end-start == 1 {
 	//	if data.Less(end, start) {
 	//		data.Swap(start, end)
