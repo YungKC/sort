@@ -69,7 +69,7 @@ func IsSorted(data Interface) bool {
 	length := data.Len()
 	for i := 1; i < length; i++ {
 		if data.Less(i, i-1) {
-			fmt.Println("Failed sort at index ", i, " with value ", data.Get(i))
+			fmt.Println("Not sort at index ", i, " with value ", data.Get(i))
 			return false
 		}
 	}

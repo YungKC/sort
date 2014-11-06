@@ -10,10 +10,13 @@ import (
 )
 
 var ints = [...]int{99999, 74, 59, 238, -784, 9845, 959, 905, 0, 0, 42, math.MaxInt64, math.MinInt64, 7586, -5467984, 7586}
+var randomInts []int
+var benchmarkSize = 100000
 
 func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	fmt.Println("Set GOMAXPROCS to ", runtime.NumCPU())
+	randomInts = generateRandomArray(benchmarkSize)
 }
 
 func TestIsSorted(t *testing.T) {
@@ -67,47 +70,56 @@ func TestHeapSort(t *testing.T) {
 func generateRandomArray(count int) []int {
 	data := make([]int, count)
 	for i := 0; i < count; i++ {
-		data[i] = rand.Int()
+		data[i] = rand.Intn(count) - count/2
 	}
 	return data
 }
 
 func benchmarkInternal(b *testing.B, searchFn SortFn, size int) {
-	data := generateRandomArray(size)
-	dataSlice := IntSlice(data[0:])
-	b.ResetTimer()
-	searchFn(dataSlice)
-	b.StopTimer()
-	if !IsSorted(dataSlice) {
-		b.Error("Input %v", ints)
-		b.Error("Sorted %v", data)
+	for n := 0; n < b.N; n++ {
+		//	data := generateRandomArray(size)
+		data := make([]int, size)
+		for i := 0; i < size; i++ {
+			data[i] = randomInts[i]
+		}
+		dataSlice := IntSlice(data[0:])
+		//	fmt.Println(dataSlice)
+		b.StartTimer()
+		searchFn(dataSlice)
+		//	fmt.Println(dataSlice)
+
+		b.StopTimer()
+		if !IsSorted(dataSlice) {
+			b.Error("Input %v", ints)
+			b.Error("Sorted %v", data)
+		}
 	}
 }
 
 func BenchmarkInsertionSort(b *testing.B) {
-	benchmarkInternal(b, InsertionSort, 10000)
+	benchmarkInternal(b, InsertionSort, benchmarkSize)
 }
 
 func BenchmarkSelectionSort(b *testing.B) {
-	benchmarkInternal(b, SelectionSort, 10000)
+	benchmarkInternal(b, SelectionSort, benchmarkSize)
 }
 
 func BenchmarkMergeSort(b *testing.B) {
-	benchmarkInternal(b, MergeSort, 2000000)
+	benchmarkInternal(b, MergeSort, benchmarkSize)
 }
 
 func BenchmarkMergeSortConcurrent(b *testing.B) {
-	benchmarkInternal(b, MergeSortConcurrent, 2000000)
+	benchmarkInternal(b, MergeSortConcurrent, benchmarkSize)
 }
 
 func BenchmarkQuickSort(b *testing.B) {
-	benchmarkInternal(b, QuickSort, 2000000)
+	benchmarkInternal(b, QuickSort, benchmarkSize)
 }
 
 func BenchmarkBubbleSort(b *testing.B) {
-	benchmarkInternal(b, BubbleSort, 10000)
+	benchmarkInternal(b, BubbleSort, benchmarkSize)
 }
 
 func BenchmarkHeapSort(b *testing.B) {
-	benchmarkInternal(b, HeapSort, 100000)
+	benchmarkInternal(b, HeapSort, benchmarkSize)
 }
